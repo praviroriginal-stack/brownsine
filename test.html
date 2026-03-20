@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JEE Progress Tracker</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: white;
+      padding: 20px;
+    }
+    input, select, button {
+      padding: 8px;
+      margin: 5px;
+    }
+    .card {
+      background: #222;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>📘 JEE Progress Tracker</h1>
+
+<input id="chapter" placeholder="Chapter name">
+<select id="stage">
+  <option>Pending</option>
+  <option>Theory Done</option>
+  <option>Level 1</option>
+  <option>Mains Level</option>
+  <option>Advanced Level</option>
+  <option>Mastery</option>
+</select>
+<input id="notes" placeholder="Notes">
+<button onclick="addProgress()">Add</button>
+
+<h2>Your Progress</h2>
+<div id="list"></div>
+
+<script>
+  let data = JSON.parse(localStorage.getItem("progress")) || [];
+
+  function saveData() {
+    localStorage.setItem("progress", JSON.stringify(data));
+  }
+
+  function render() {
+    let list = document.getElementById("list");
+    list.innerHTML = "";
+
+    data.forEach((item, index) => {
+      list.innerHTML += `
+        <div class="card">
+          <b>${item.chapter}</b><br>
+          Stage: ${item.stage}<br>
+          Notes: ${item.notes}<br>
+          <button onclick="deleteItem(${index})">Delete</button>
+        </div>
+      `;
+    });
+  }
+
+  function addProgress() {
+    let chapter = document.getElementById("chapter").value;
+    let stage = document.getElementById("stage").value;
+    let notes = document.getElementById("notes").value;
+
+    if (!chapter) return alert("Enter chapter!");
+
+    data.push({ chapter, stage, notes });
+    saveData();
+    render();
+  }
+
+  function deleteItem(index) {
+    data.splice(index, 1);
+    saveData();
+    render();
+  }
+
+  render();
+</script>
+
+</body>
+</html>
